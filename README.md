@@ -12,7 +12,7 @@ mos flash
 ```
 
 Wiring circuit for this test:
-![HC-SR04-Test](hc-sr04test/HC-SR04-Test.png)
+![HC-SR04-Test](https://github.com/Tommystus/hc-sr04test/blob/master/HC-SR04-Test.png)
 
 Much time was spent on moving code around to prevent trigger interrupt from interfering with timer.  See code comment.
 
