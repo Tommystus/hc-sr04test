@@ -22,6 +22,7 @@ GPIO.write(ledPin,0); // activate LED
 
 let hcInitEcho = ffi('int hcInitEcho(int, int)');
 let hcTrigEcho = ffi('int hcTrigEcho(int)');
+let hcTrigEchoCb = ffi('void *hcTrigEchoCb(int, void (*)(int, userdata), userdata)');
 let hcGetEchoTime = ffi('double hcGetEchoTime(void)');
 
 GPIO.set_mode(trigPin, GPIO.MODE_OUTPUT);
@@ -37,26 +38,27 @@ GPIO.set_button_handler(btnPin, GPIO.PULL_UP, GPIO.INT_EDGE_NEG, 200, function()
 
 	print('**Button Trigger');
 
-	/* Very strange random system hangup / unstable after a few button press
-	   when trigger right before timer
-	   maybe because usleep in trigger function?
-		hcTrigEcho(trigPin);
-	*/
-//	Timer.set(200, false, function() {
+/* ok but not great
+	Timer.set(200, false, function() {
 		let t = hcGetEchoTime();
 		print('**echo t=', t);	// result from last trigger
+// 		fire trigger without callback
 		hcTrigEcho(trigPin);	// trigger for next cycle
-//	}, null);
+	}, null);
+*/
+
+//	use call back method is stable
+	hcTrigEchoCb(trigPin, function( t, arg) {
+		print('**b-echoCb t=', t);
+	}, null);
 
 }, null);
 
 
-Timer.set(2000, true, function() {
-	GPIO.write(ledPin,0);	// signal LED
-	/* trigger before timer is unstable - not sure why
-	   maybe due to usleep in hcTrigEcho
-	hcTrigEcho(trigPin);
-	*/
+Timer.set(3000, true, function() {
+
+/* This is ok - only touch gpio before trigger
+	GPIO.write(ledPin,0);
 	Timer.set(100, false, function() {
 		let t = hcGetEchoTime();
 		print('**t-echo t=', t);	// result from last trigger
@@ -64,6 +66,47 @@ Timer.set(2000, true, function() {
 		// stable trigger here
 		hcTrigEcho(trigPin);	// trigger for next cycle
 	}, null);
+*/
+
+/* single trigger with callback is ok
+*/
+	GPIO.write(ledPin,0);	// signal LED - use gpio is ok before trigger
+	hcTrigEchoCb(trigPin, function( t, arg) {
+		print('**t-echo t=', t);
+		GPIO.write(ledPin,1); 	// touch gpio after echo is ok
+	}, null);
+
+/* Multiple trigger with wait delay to do echo avg is unstable
+	let tcnt = 2;
+	let tacc = 0;
+	for (let i=0; i < tcnt; i++) {
+		hcTrigEchoCb(trigPin, function( t, arg) {
+			tacc += t;
+		}, null);
+		Sys.usleep(200000);
+	}
+	let t = tacc/tcnt;
+	print('**t1a-echo avg t=', t);
+*/
+
+/*	Also unstable
+	let tacc = 0;
+	let tcnt = 2;
+	let i = 0;
+	while (i < tcnt) {
+		hcTrigEchoCb(trigPin, function( t, arg) {
+			tacc += t;
+			i++;
+		}, null);
+		Sys.wdt_feed();
+	}
+	let t = tacc/tcnt;
+	print('**t-echo avg t=', t);
+*/
+
+
+//	GPIO.write(ledPin,1); // don't touch gpio during trigger operation
+
 }, null);
 
 

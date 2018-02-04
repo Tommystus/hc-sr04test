@@ -15,6 +15,8 @@
 struct hcDataRec_s {
   int tpin;
   int epin;
+  void (*handler)(int, void *);
+  void *user_data;
   uint64_t t;
 };
 static struct hcDataRec_s hcObj;
@@ -33,8 +35,10 @@ static void echoHandler(int pin, void *arg)
     return;
   }
   // 1-0 transition. Save delta time
-  t -= obj->t;
-  obj->t = t;
+  obj->t = t - obj->t;
+  if (obj->handler) {
+     obj->handler(obj->t, obj->user_data);
+  }
 //  mgos_gpio_disable_int(pin); // not an issue to keep interrupt enabled
 }
 
@@ -59,6 +63,7 @@ int hcInitEcho( int tpin, int epin) {
 // start trigger echo
 int hcTrigEcho(int tpin) {
 	hcObj.t = 0;
+	hcObj.handler = NULL;
 
 //	mgos_gpio_enable_int(hcObj.epin);  // not an issue to keep interrupt enabled
 
@@ -68,6 +73,20 @@ int hcTrigEcho(int tpin) {
 
 	return 1;
 }
+
+// start trigger echo
+int hcTrigEchoCb(int tpin, void (*handler)(int, void *), void *user_data) {
+	hcObj.t = 0;
+	hcObj.handler = handler;
+	hcObj.user_data = user_data;
+
+	mgos_gpio_write( tpin, 1);
+	mgos_usleep(10);
+	mgos_gpio_write( tpin, 0);
+
+	return 1;
+}
+
 
 double hcGetEchoTime(void) {
 
