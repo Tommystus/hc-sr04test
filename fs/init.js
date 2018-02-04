@@ -47,15 +47,45 @@ GPIO.set_button_handler(btnPin, GPIO.PULL_UP, GPIO.INT_EDGE_NEG, 200, function()
 	}, null);
 */
 
-//	use call back method is stable
+/*	use call back method is stable
+*/
 	hcTrigEchoCb(trigPin, function( t, arg) {
 		print('**b-echoCb t=', t);
 	}, null);
 
+/* multiple trig to get avg doesn't work
+	let tcnt = 2;
+	let tacc = 0;
+	for (let i=0; i < tcnt; i++) {
+		hcTrigEchoCb(trigPin, function( t, arg) {
+			tacc += t;
+		}, null);
+		Sys.usleep(200000);
+	}
+	let t = tacc/tcnt;
+	print('**bt-echo avg t=', t);
+*/
+/* also unstable
+	let tacc = 0;
+	let tcnt = 4;
+	for (let i=0; i < tcnt; i++) {
+		let waitForEcho = true;
+		hcTrigEchoCb(trigPin, function( t, arg) {
+			tacc += t;
+			waitForEcho = false;
+		}, null);
+		while (waitForEcho) {
+			Sys.wdt_feed();
+		}
+	}
+	let t = tacc/tcnt;
+	print('**bt-echo avg t=', t);
+*/
+
 }, null);
 
 
-Timer.set(3000, true, function() {
+Timer.set(4000, true, function() {
 
 /* This is ok - only touch gpio before trigger
 	GPIO.write(ledPin,0);
@@ -88,22 +118,6 @@ Timer.set(3000, true, function() {
 	let t = tacc/tcnt;
 	print('**t1a-echo avg t=', t);
 */
-
-/*	Also unstable
-	let tacc = 0;
-	let tcnt = 2;
-	let i = 0;
-	while (i < tcnt) {
-		hcTrigEchoCb(trigPin, function( t, arg) {
-			tacc += t;
-			i++;
-		}, null);
-		Sys.wdt_feed();
-	}
-	let t = tacc/tcnt;
-	print('**t-echo avg t=', t);
-*/
-
 
 //	GPIO.write(ledPin,1); // don't touch gpio during trigger operation
 
