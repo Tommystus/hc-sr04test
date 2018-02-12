@@ -1,5 +1,5 @@
 /*
-	Use HC-SR04 to control neopix color
+	Use HC-SR04 to control tone.  Test for possible use in vision impaired application.
 */
 load('api_gpio.js');
 load('api_sys.js');
