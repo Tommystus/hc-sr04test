@@ -62,8 +62,6 @@ int hcInitEcho( int tpin, int epin) {
 
 // start trigger echo
 int hcTrigEcho(int tpin) {
-	hcObj.t = 0;
-	hcObj.handler = NULL;
 
 //	mgos_gpio_enable_int(hcObj.epin);  // not an issue to keep interrupt enabled
 
