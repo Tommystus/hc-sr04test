@@ -8,6 +8,13 @@ sources:
   - src
 filesystem:
   - fs
+
+config_schema:
+  - ["wifi.ap.enable",false]
+  - ["wifi.sta.enable",false]
+  - ["http.enable",false]
+  - ["mqtt.enable",false]
+
 libs:
     # common mgos libs
   - origin: https://github.com/mongoose-os-libs/ca-bundle
@@ -24,7 +31,7 @@ libs:
   - origin: https://github.com/mongoose-os-libs/pwm
   - origin: https://github.com/mongoose-os-libs/wifi
   - origin: https://github.com/mongoose-os-libs/pwm
-  - origin: https://github.com/mongoose-os-libs/arduino-compat
+  - origin: https://github.com/mongoose-os-libs/neopixel
 tags:
   - js
   - hw
