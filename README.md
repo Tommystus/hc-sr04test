@@ -2,7 +2,7 @@
 
 ## Overview
 
-Concept testing of time measurement from HC-SR04 ultrasonic sensor echo pulse on Mongoose OS.  Interrupt code based on IR library.  Eventually, code need to be converted to a lib for general use.
+Concept testing of time measurement from HC-SR04 ultrasonic sensor echo pulse on [Mongoose OS](https://mongoose-os.com/).  Interrupt code based on [IR library](https://github.com/mongoose-os-libs/ir).  Eventually, code need to be converted to a lib for general use.
 
 Examples build:
 ```
