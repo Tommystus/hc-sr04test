@@ -19,3 +19,5 @@ The diode is there to protect ESP8266 from 5v signal of the HC-SR04 module (just
 Much time was spent on moving code around to prevent trigger interrupt from interfering with timer.  See code comment.  Also, keep trigger and echo lines separated to prevent signal crosstalk which may cause false trigger.
 
 Rough formula for converting echo pulse width micro-second time to centimeter:  d = (t+14)/55
+
+Examples ping to sound [pingbuz.js](https://github.com/Tommystus/hc-sr04test/blob/master/examples/pingbuz.js) demo [video](https://www.youtube.com/watch?v=fkWPz4LJ7Sw)
