@@ -20,4 +20,4 @@ Much time was spent on moving code around to prevent trigger interrupt from inte
 
 Rough formula for converting echo pulse width micro-second time to centimeter:  d = (t+14)/55
 
-Examples ping to sound [pingbuz.js](https://github.com/Tommystus/hc-sr04test/blob/master/examples/pingbuz.js) demo [video](https://www.youtube.com/watch?v=fkWPz4LJ7Sw)
+Examples ping to sound [pingbuz.js](https://github.com/Tommystus/hc-sr04test/blob/master/examples/pingbuz.js) demo [video](https://youtu.be/tw2iAI-fM5I)
